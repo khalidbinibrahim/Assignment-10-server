@@ -7,11 +7,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
-const corsOptions = {
-  origin: "http://localhost:5173/"
-}
+app.use(cors({
+  origin: 'http://localhost:5173',
+}));
 
-app.use(cors(corsOptions));
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.hguto33.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -36,9 +35,9 @@ async function run() {
       res.send(result);
     })
 
-    // GET tourist spots of a specific user
-    app.get("/user_tourist_spots/:userId", async (req, res) => {
-      const userId = req.params.userId;
+    // GET tourist spots of the currently authenticated user
+    app.get("/user_tourist_spots", async (req, res) => {
+      const userId = req.user.uid;
       const cursor = touristSpotCollection.find({ user_id: userId });
       const result = await cursor.toArray();
       res.json(result);
@@ -80,5 +79,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`)
-})
+  console.log(`Server is running on port ${port}`);
+});
