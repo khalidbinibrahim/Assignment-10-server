@@ -37,7 +37,7 @@ async function run() {
 
     // GET tourist spots of the currently authenticated user
     app.get("/user_tourist_spots", async (req, res) => {
-      const userId = req.user.uid;
+      const userId = req.userId;
       const cursor = touristSpotCollection.find({ user_id: userId });
       const result = await cursor.toArray();
       res.json(result);
