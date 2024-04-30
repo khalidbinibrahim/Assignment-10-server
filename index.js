@@ -36,15 +36,15 @@ async function run() {
     })
 
     // GET tourist spots of the currently authenticated user
-    app.get("/user_tourist_spots", async (req, res) => {
-      const userId = req.userId;
+    app.get("/user_tourist_spots/:id", async (req, res) => {
       try {
+        const userId = req.user.uid;
         const cursor = touristSpotCollection.find({ user_id: userId });
         const result = await cursor.toArray();
         res.json(result);
       } catch (error) {
-        console.error("Error fetching user tourist spots:", error);
-        res.status(500).send("Internal Server Error");
+        console.error('Error fetching user tourist spots:', error);
+        res.status(500).json({ error: 'Failed to fetch user tourist spots' });
       }
     });
 
