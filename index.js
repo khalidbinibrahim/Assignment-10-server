@@ -38,7 +38,7 @@ async function run() {
     // GET tourist spots of the currently authenticated user
     app.get("/user_tourist_spots/:id", async (req, res) => {
       try {
-        const userId = req.user.uid;
+        const userId = req.params.id;
         const cursor = touristSpotCollection.find({ user_id: userId });
         const result = await cursor.toArray();
         res.json(result);
@@ -47,6 +47,7 @@ async function run() {
         res.status(500).json({ error: 'Failed to fetch user tourist spots' });
       }
     });
+    
 
     // POST a new tourist spot
     app.post("/tourist_spots", async (req, res) => {
