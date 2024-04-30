@@ -31,10 +31,17 @@ async function run() {
 
     // GET all tourist spots
     app.get("/tourist_spots", async (req, res) => {
-      const cursor = touristSpotCollection.find();
-      const result = await cursor.toArray();
-      res.send(result);
-    })
+      try {
+        const { country_id } = req.query;
+        const filter = country_id ? { country_id } : {};
+        const cursor = touristSpotCollection.find(filter);
+        const result = await cursor.toArray();
+        res.json(result);
+      } catch (error) {
+        console.error('Error fetching tourist spots:', error);
+        res.status(500).json({ error: 'Failed to fetch tourist spots' });
+      }
+    });
 
     // GET tourist spots of the currently authenticated user
     app.get("/user_tourist_spots/:id", async (req, res) => {
@@ -49,11 +56,25 @@ async function run() {
       }
     });
 
+    // GET all countries data
     app.get("/countries", async (req, res) => {
       const cursor = countriesCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     })
+
+    // GET tourist spots by country ID
+    app.get("/countries/:name/tourist_spots", async (req, res) => {
+      try {
+        const countryName = req.params.name;
+        const cursor = touristSpotCollection.find({ country_name: countryName });
+        const result = await cursor.toArray();
+        res.json(result);
+      } catch (error) {
+        console.error('Error fetching tourist spots for the country:', error);
+        res.status(500).json({ error: 'Failed to fetch tourist spots for the country' });
+      }
+    });
 
     // POST a new tourist spot
     app.post("/tourist_spots", async (req, res) => {
