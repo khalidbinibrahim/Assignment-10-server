@@ -27,6 +27,7 @@ async function run() {
   try {
     const database = client.db("touristsSpotsDB");
     const touristSpotCollection = database.collection("touristsSpots");
+    const countriesCollection = database.collection("countries");
 
     // GET all tourist spots
     app.get("/tourist_spots", async (req, res) => {
@@ -47,7 +48,12 @@ async function run() {
         res.status(500).json({ error: 'Failed to fetch user tourist spots' });
       }
     });
-    
+
+    app.get("/countries", async (req, res) => {
+      const cursor = countriesCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
 
     // POST a new tourist spot
     app.post("/tourist_spots", async (req, res) => {
