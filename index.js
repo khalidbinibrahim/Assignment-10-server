@@ -8,7 +8,10 @@ const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: 'https://khalid-bin-ibrahim-a10.web.app',
+  origin: [
+    'https://khalid-bin-ibrahim-a10.web.app',
+    'http://localhost:5173'
+  ],
 }));
 
 app.use(express.json());
